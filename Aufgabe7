@@ -1,0 +1,163 @@
+public class CharArrayOps {
+    public static int[] readArray() throws Exception{
+
+        int[] input = new int[100];
+        boolean full = false;
+        for(int i = 0; i < 100; i++) {
+            if (!full)
+                input[i] = System.in.read();
+            else
+                input[i] = ' ';
+            if (input[i] == '\r' || input[i] == '\n'){
+                input[i] = ' ';
+                full = true;
+            }
+        }
+
+        //Bestimmen der laenge
+        int length = input.length;
+        while (true){
+            if(input[length-1] != ' ')
+                break;
+            else
+                length--;
+        }
+
+        int[] array = new int[length];
+        for(int i = 0; i < length ; i++){
+            array[i] = input[i];
+        }
+
+        return array;
+    }
+
+    public static void printArray(final int[] array){
+        for (int i = 0; i < array.length; i++){
+            System.out.print((char)array[i]);
+        }
+        System.out.println();
+    }
+
+    public static int[] replaceArray(final int[] array, int char1, int char2){
+        int[] newArray = new int[array.length];
+        for(int i = 0; i < array.length; i++){
+            if (array[i] == char1)
+                newArray[i] = char2;
+            else
+                newArray[i] = array[i];
+        }
+        return newArray;
+    }
+
+    public static int compareArray(int[] array1, int[] array2){
+        int position = 0;
+
+        if(array1.length < array2.length)
+            return -1;
+        boolean same = false;
+
+        do{
+            if (array1[position] == array2[0]) {
+                same = true;
+                for (int j = 0; j < array2.length; j++) {
+                    if (array1[j + position] != array2[j]) {
+                        same = false;
+                        break;
+                    }
+                }
+            }
+            if (same) {
+                break;
+            }
+            position++;
+        }while (position < array1.length-array2.length);
+
+        if (!same)
+            return -1;
+        return position;
+    }
+
+    public static int[] deletePositionArray(int[]array, int position){
+        if(position > array.length)
+            return array;
+        int[] newArray = new int[array.length-1];
+        for(int i = 0; i < newArray.length; i++){
+            if(i >= position-1)
+                newArray[i] = array[i+1];
+            else
+                newArray[i] = array[i];
+        }
+        return newArray;
+    }
+
+    public static int[] deleteCharArray(int[]array, int letter){
+        int count = 0;
+        int help = 0;
+        for(int i = 0; i < array.length; i++){
+            if(array[i]==letter)
+                count++;
+        }
+        int[] newArray = new int[array.length-count];
+        for(int i = 0; i < array.length; i++){
+            if(array[i]==letter)
+                help--;
+            else
+                newArray[i+help]=array[i];
+        }
+
+        return newArray;
+    }
+
+    public static int[] insertArray(int[] array, String sinsert, int position) {
+        char[] cinsert = sinsert.toCharArray();
+        int[] newArray = new int[array.length + cinsert.length];
+        int count = 0;
+        if (position - 1 > array.length) {
+            for (int i = 0; i < newArray.length; i++) {
+                if (i < array.length)
+                    newArray[i] = array[i];
+                else
+                    newArray[i] = cinsert[i - array.length];
+            }
+        } else
+            for (int i = 0; i < newArray.length; i++)
+                if (i >= position-1 && i < position-1 + cinsert.length){
+                    newArray[i] = cinsert[count];
+                    count++;
+                }
+                else
+                    newArray[i] = array[i - count];
+        return newArray;
+    }
+
+    public static int[] copyArray (int[] array){
+        int[] newArray = new int[array.length];
+        for(int i = 0; i < array.length; i++)
+            newArray[i] = array[i];
+        return array;
+    }
+
+    public static void main(String[] args) throws Exception{
+        int[] array = readArray();
+        printArray(array);
+        String secret ="secret";
+
+        int[] array1;
+        array1 = replaceArray(array, 'e', 'i');
+        array1 = replaceArray(array1, 'a', 'u');
+        printArray(array1);
+
+        int[] array2 = insertArray(array,"e", 2);
+        printArray(array2);
+
+        int[] array3 = new int[array.length+secret.length()];
+        for(int i = 0; i < secret.length(); i++){
+            array3 = insertArray(array3,secret.substring(i,i),2+i*2);
+        }
+
+        printArray(array3);
+
+        int[] array4 = (deleteCharArray(deleteCharArray(deleteCharArray(deleteCharArray(deleteCharArray(array,'a'),'e'),'i'),'o'),'u'));
+        printArray(array4);
+    }
+}
